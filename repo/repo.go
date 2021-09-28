@@ -15,7 +15,9 @@ type DataBase struct {
 //func (db *DataBase) PostToDb (movie entities.Movie) {
 //	db.Movies = append(db.Movies, movie)
 //}
+
 //function that unmarshals
+
 func CallMovies(mv entities.Movie) (DataBase, error) {
 	db := DataBase{}
 	jsonBytes, err := ioutil.ReadFile("jsonFile/moviedb.json")

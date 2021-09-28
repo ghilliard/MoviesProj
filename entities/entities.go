@@ -3,15 +3,15 @@ package entities
 import "github.com/google/uuid"
 
 type Movie struct {
-	Id          string   `validate:"omitempty,uuid"`
-	Title       string   `validate:"required"`
-	Genre       []string `validate:"required"`
-	Description string   `validate:"required"`
-	Director    string   `validate:"required"`
-	MainActors  []string `validate:"required"`
-	Rating      float64  `validate:"required"`
+	Id          string
+	Title       string
+	Genre       []string
+	Description string
+	Director    string
+	MainActors  []string
+	Rating      float64
 }
 
-func (m *Movie) SetId() {
+func (m *Movie) SetId() { //setting UUID
 	m.Id = uuid.New().String()
 }
