@@ -2,17 +2,14 @@ package handlers
 
 import (
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
-func NewServer() *http.Server {
+func ConfigureRouter(mh MovieHandler) *mux.Router {
 	r := mux.NewRouter()
 
-	r.HandleFunc("MoviesProj/entities", PostNewMovie).Methods("POST")
-	svr := &http.Server{
-		Handler: r,
-		Addr:    "127.0.0.1:8080",
-	}
-	return svr
+	r.HandleFunc("/movie", mh.PostNewMovie).Methods("POST")
+	r.HandleFunc("/movie", mh.GetMovies).Methods("GET")
+	r.HandleFunc("/movie/{Id}", mh.GetById).Methods("GET")
 
+	return r
 }

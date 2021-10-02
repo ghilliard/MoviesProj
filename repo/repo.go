@@ -3,70 +3,75 @@ package repo
 import (
 	"MoviesProj/entities"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 )
 
 type DataBase struct {
-	Movies []entities.Movie `json:"Movies"`
-	//MoviesMap map[string] entities.Movie
+	Movies []entities.Movie
 }
 
-//func (db *DataBase) PostToDb (movie entities.Movie) {
-//	db.Movies = append(db.Movies, movie)
-//}
+type File struct {
+	Filename string
+}
 
-//function that unmarshals
-
-func CallMovies(mv entities.Movie) (DataBase, error) {
-	db := DataBase{}
-	jsonBytes, err := ioutil.ReadFile("jsonFile/moviedb.json")
-	if err != nil {
-		return db, err
+func NewRepository(fn string) File {
+	return File{
+		Filename: fn,
 	}
-	mv.SetId()
+}
+
+func (f File) CallMovie(mv entities.Movie) error { //method to File so we can call it in ReadFile
+	db := DataBase{}
+	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	if err != nil {
+		return err
+	}
 	err = json.Unmarshal(jsonBytes, &db)
 	if err != nil {
-		return db, err
+		return err
 	}
 	db.Movies = append(db.Movies, mv)
 
 	movieBytes, err := json.MarshalIndent(db, "", " ")
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
-	err = ioutil.WriteFile("jsonFile/moviedb.json", movieBytes, 0644)
+	err = ioutil.WriteFile(f.Filename, movieBytes, 0644)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
+	return nil
+}
 
+func (f File) ViewMovies() (DataBase, error) {
+	db := DataBase{}
+	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	if err != nil {
+		return db, err
+	}
+	err = json.Unmarshal(jsonBytes, &db)
+	if err != nil {
+		return db, err
+	}
 	return db, nil
 }
 
-//function that marshals
-//func (db DataBase) CreateMovie(movie entities.Movie) (entities.Movie, error) {
-//	repo, _ := CallMovies()
-//	repo.Movies = append(repo.Movies, movie)
-//	sendFile, err := json.Marshal(movie)
-//	jsonFile, err := json.MarshalIndent(repo, "", " ")
-//	if err != nil {
-//		return movie, err
-//	}
-//	err = ioutil.WriteFile("jsonFile/moviedb.json", jsonFile, 0644)
-//	if err != nil {
-//		return entities.Movie{}, err
-//	}
-//	return sendFile, err
-//}
-//
-//
-//func (db DataBase) FindMovieById(Id string) entities.Movie {
-//	repo, _ := CallMovies()
-//	//movie := repo.MoviesMap[Id]
-//
-//	return movie
-//
-//}
+func (f File) FindMovieById(id string) (entities.Movie, error) {
+	db := DataBase{}
+	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	if err != nil {
+		return entities.Movie{}, err
+	}
+	err = json.Unmarshal(jsonBytes, &db)
 
-//func (db DataBase) DeleteMovie
+	idFound := entities.Movie{}
+
+	for _, v := range db.Movies {
+		if v.Id == id {
+			idFound = v
+			return idFound, nil
+		}
+	}
+	return idFound, nil
+}

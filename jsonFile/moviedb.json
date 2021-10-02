@@ -1,9 +1,87 @@
 {
- "Id": "",
- "Title": "",
- "Genre": null,
- "Description": "",
- "Director": "",
- "MainActors": null,
- "Rating": 0
+ "Movies": [
+  {
+   "Id": "31bf54cb-1a02-414a-92de-f1d0bcabcada",
+   "Title": "Whiplash",
+   "Genre": [
+    "Drama",
+    "Music"
+   ],
+   "Description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.",
+   "Director": "Damien Chazelle",
+   "MainActors": [
+    "Miles Teller",
+    "J.K. Simmons"
+   ],
+   "Rating": 8.5
+  },
+  {
+   "Id": "8fe87c1e-1eb2-4ec3-9d1f-32ebc0b4d2c3",
+   "Title": "No Country For Old Men",
+   "Genre": [
+    "Drama",
+    "Crime",
+    "Thriller"
+   ],
+   "Description": "Violence and mayhem ensue after a hunter stumbles upon a drug deal gone wrong and more than two million dollars in cash near the Rio Grande.",
+   "Director": "Coen Brothers",
+   "MainActors": [
+    "Tommy Lee Jones",
+    "Javier Bardem",
+    "Josh Brolin"
+   ],
+   "Rating": 8.1
+  },
+  {
+   "Id": "28adf869-db23-4c70-82aa-7e603abbdd78",
+   "Title": "The Dark Knight",
+   "Genre": [
+    "Drama",
+    "Crime",
+    "Action"
+   ],
+   "Description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+   "Director": "Christopher Nolan",
+   "MainActors": [
+    "Christian Bale",
+    "Heath Ledger",
+    "Aaron Eckhart"
+   ],
+   "Rating": 9
+  },
+  {
+   "Id": "5c22f66a-f9f1-419e-8ebb-25d0bd5115d8",
+   "Title": "Blade Runner 2049",
+   "Genre": [
+    "Drama",
+    "Mystery",
+    "Action"
+   ],
+   "Description": "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard, who's been missing for thirty years.",
+   "Director": "Denis Villeneuve",
+   "MainActors": [
+    "Harrison Ford",
+    "Ryan Gosling",
+    "Ana de Armas"
+   ],
+   "Rating": 8
+  },
+  {
+   "Id": "06e64340-a92d-4d28-8ef7-d9874b4bb39b",
+   "Title": "1917",
+   "Genre": [
+    "Drama",
+    "War",
+    "Action"
+   ],
+   "Description": "April 6th, 1917. As a regiment assembles to wage war deep in enemy territory, two soldiers are assigned to race against time and deliver a message that will stop 1,600 men from walking straight into a deadly trap.",
+   "Director": "Sam Mendes",
+   "MainActors": [
+    "Dean-Charles Chapman",
+    "George MacKay",
+    "Daniel Mays"
+   ],
+   "Rating": 8.3
+  }
+ ]
 }
