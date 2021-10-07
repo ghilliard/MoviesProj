@@ -3,7 +3,6 @@ package repo
 import (
 	"MoviesProj/entities"
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 )
 
@@ -84,23 +83,17 @@ func (f File) DeleteMovieById(id string) error {
 		return err
 	}
 	err = json.Unmarshal(jsonBytes, &db)
+		if err != nil {
+			return err
+		}
 
-	newDb := DataBase{} //new variable for Database that we use to append the ID and compare to original Database
-						//so we can return an error saying not found
-
-	dbLength := len(db.Movies)
-	for _, v := range db.Movies {
+	for i, v := range db.Movies {
 		if v.Id == id {
-			continue
-		} else {
-			newDb.Movies = append(newDb.Movies, v)
+			db.Movies = append(db.Movies[:i], db.Movies[i + 1:]...)
 		}
 	}
 
-	if len(newDb.Movies) == dbLength {
-		return errors.New("could not delete, movie not found")
-	}
-	movieBytes, err := json.MarshalIndent(newDb, "", "	")
+	movieBytes, err := json.MarshalIndent(db, "", "	")
 	if err != nil {
 		return err
 	}
