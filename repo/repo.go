@@ -89,7 +89,7 @@ func (f File) DeleteMovieById(id string) error {
 
 	for i, v := range db.Movies {
 		if v.Id == id {
-			db.Movies = append(db.Movies[:i], db.Movies[i + 1:]...)
+			db.Movies = append(db.Movies[:i], db.Movies[i + 1:]...) //get everything before and after indexID
 		}
 	}
 
