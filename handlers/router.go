@@ -4,7 +4,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func ConfigureRouter(mh MovieHandler) *mux.Router {
+func ConfigureRouter(mh MovieHandler) *mux.Router { //func that is called in main
 	r := mux.NewRouter()
 
 	r.HandleFunc("/movie", mh.PostNewMovie).Methods("POST")

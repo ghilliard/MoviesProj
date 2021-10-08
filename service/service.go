@@ -11,7 +11,7 @@ type Service struct { //create a struct of repo.File so you can use it as a meth
 	File repo.File
 }
 
-func NewService(f repo.File) Service {
+func NewService(f repo.File) Service { //func that returns Service struct that is called in main
 	return Service{
 		File: f,
 	}
@@ -21,7 +21,7 @@ func (s Service) CallMovie(mv entities.Movie) error {
 	mv.Id = uuid.New().String()
 
 	if mv.Rating >= 0 && mv.Rating <= 10 {
-		err := s.File.CallMovie(mv)
+		err := s.File.AddMovie(mv)
 		if err != nil {
 			return err
 		}

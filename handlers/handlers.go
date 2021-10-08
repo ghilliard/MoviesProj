@@ -10,12 +10,12 @@ import (
 )
 
 type MovieHandler struct {
-	Serv service.Service
+	serv service.Service
 }
 
-func NewMovieHandler(s service.Service) MovieHandler { //func that returns MovieHandler struct that I call in Main
+func NewMovieHandler(s service.Service) MovieHandler { //func that returns MovieHandler struct that is called in main
 	return MovieHandler{
-		Serv: s,
+		serv: s,
 	}
 }
 
@@ -26,14 +26,14 @@ func (mh MovieHandler) PostNewMovie(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = mh.Serv.CallMovie(mv)
+	err = mh.serv.CallMovie(mv)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusCreated) //or StatusOK?
 }
 
 func (mh MovieHandler) GetAllMovies(w http.ResponseWriter, r *http.Request) {
-	movDb, err := mh.Serv.ViewMovies()
+	movDb, err := mh.serv.ViewMovies()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
@@ -44,7 +44,7 @@ func (mh MovieHandler) GetAllMovies(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(movieDb)
 }
 
@@ -52,7 +52,7 @@ func (mh MovieHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r) //create a map of route variables which are retrieved by this line
 	id := vars["Id"]
 
-	mvId, err := mh.Serv.FindMovieById(id)
+	mvId, err := mh.serv.FindMovieById(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 	}
@@ -71,7 +71,7 @@ func (mh MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["Id"]
 
-	err := mh.Serv.DeleteMovieById(id)
+	err := mh.serv.DeleteMovieById(id)
 	if err != nil {
 		switch err.Error() {
 		case "could not delete, movie not found":

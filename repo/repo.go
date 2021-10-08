@@ -14,13 +14,13 @@ type File struct {
 	Filename string
 }
 
-func NewRepository(fn string) File {
+func NewRepository(fn string) File { //func that returns File struct that is called in main
 	return File{
 		Filename: fn,
 	}
 }
 
-func (f File) CallMovie(mv entities.Movie) error { //method to File so we can call it in ReadFile
+func (f File) AddMovie(mv entities.Movie) error { //method to File so we can call it in ReadFile
 	db := DataBase{}
 	jsonBytes, err := ioutil.ReadFile(f.Filename)
 	if err != nil {
