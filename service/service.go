@@ -53,3 +53,11 @@ func (s Service) DeleteMovieById(id string) error {
 	}
 	return nil
 }
+
+func (s Service) UpdateMovie(id string, m entities.Movie) error {
+	err := s.File.UpdateMovie(id, m)
+		if err != nil {
+			return err
+		}
+		return nil
+	}

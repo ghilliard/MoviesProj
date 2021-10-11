@@ -104,3 +104,32 @@ func (f File) DeleteMovieById(id string) error {
 	}
 	return nil
 }
+
+func (f File) UpdateMovie(id string, m entities.Movie) error {
+	db := DataBase{}
+	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(jsonBytes, &db)
+	if err != nil {
+		return err
+	}
+	for i, v := range db.Movies {
+		if v.Id == id {
+			db.Movies = append(db.Movies[:i], db.Movies[i+1:]...)
+			v.Id = id
+			db.Movies = append(db.Movies, m)
+		}
+	}
+
+	movieBytes, err := json.MarshalIndent(db, "", " ")
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile(f.Filename, movieBytes, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -61,7 +61,6 @@ func (mh MovieHandler) GetById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(movie)
@@ -73,11 +72,26 @@ func (mh MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
 
 	err := mh.serv.DeleteMovieById(id)
 	if err != nil {
-		switch err.Error() {
-		case "could not delete, movie not found":
 			http.Error(w, err.Error(), http.StatusNotFound)
-		}
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+}
+
+func (mh MovieHandler) UpdateMovie(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["Id"]
+
+	mv := entities.Movie{}
+	err := json.NewDecoder(r.Body).Decode(&mv)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = mh.serv.UpdateMovie(id, mv)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound) //or 500 error?
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 }
