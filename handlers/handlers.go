@@ -2,75 +2,91 @@ package handlers
 
 import (
 	"MoviesProj/entities"
-	"MoviesProj/service"
+	"MoviesProj/repo"
+	//"MoviesProj/service"
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 )
 
+// Instance of interface that defines the functionality that a repo must have in order to be called in this handlers layer
+type Service interface {
+	AddMovie(m entities.Movie) error
+	ViewMovies() (repo.DataBase, error)
+	FindMovieById (id string) (entities.Movie, error)
+	DeleteMovieById (id string) error
+	UpdateMovieById (id string, m entities.Movie) error
+}
+
 type MovieHandler struct {
-	serv service.Service
+	Svc Service
 }
 
-func NewMovieHandler(s service.Service) MovieHandler { //func that returns MovieHandler struct that is called in main
+func NewMovieHandler(s Service) MovieHandler { //func that returns MovieHandler struct that is called in main
 	return MovieHandler{
-		serv: s,
+		Svc: s,
 	}
 }
 
-func (mh MovieHandler) PostNewMovie(w http.ResponseWriter, r *http.Request) {
-	mv := entities.Movie{}
+func (mh MovieHandler) PostMovieHandler(w http.ResponseWriter, r *http.Request) {
+	m := entities.Movie{}
 
-	err := json.NewDecoder(r.Body).Decode(&mv)
+	err := json.NewDecoder(r.Body).Decode(&m)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	err = mh.serv.CallMovie(mv)
+	err = mh.Svc.AddMovie(m)
+	if err != nil {
+		switch err.Error() {
+		case "invalid rating":
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated) //or StatusOK?
 }
 
-func (mh MovieHandler) GetAllMovies(w http.ResponseWriter, r *http.Request) {
-	movDb, err := mh.serv.ViewMovies()
+func (mh MovieHandler) GetMoviesHandler(w http.ResponseWriter, r *http.Request) {
+	database, err := mh.Svc.ViewMovies()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	movieDb, err := json.MarshalIndent(movDb, "", "	")
+	movieBytes, err := json.MarshalIndent(database, "", "	")
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(movieDb)
+	_, err = w.Write(movieBytes)
 }
 
-func (mh MovieHandler) GetById(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r) //create a map of route variables which are retrieved by this line
+func (mh MovieHandler) GetByIdHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r) //URL of the Request creates a map of route variables which are retrieved by this line
 	id := vars["Id"]
 
-	mvId, err := mh.serv.FindMovieById(id)
+	movieStruct, err := mh.Svc.FindMovieById(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 	}
 
-	movie, err := json.MarshalIndent(mvId, "", "	")
+	movieBytes, err := json.MarshalIndent(movieStruct, "", "	")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(movie)
+	_, _ = w.Write(movieBytes)
 }
 
-func (mh MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
+func (mh MovieHandler) DeleteMovieHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["Id"]
 
-	err := mh.serv.DeleteMovieById(id)
+	err := mh.Svc.DeleteMovieById(id)
 	if err != nil {
 			http.Error(w, err.Error(), http.StatusNotFound)
 	}
@@ -78,17 +94,17 @@ func (mh MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (mh MovieHandler) UpdateMovie(w http.ResponseWriter, r *http.Request) {
+func (mh MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["Id"]
+	movieStruct := entities.Movie{}
 
-	mv := entities.Movie{}
-	err := json.NewDecoder(r.Body).Decode(&mv)
+	err := json.NewDecoder(r.Body).Decode(&movieStruct)
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	err = mh.serv.UpdateMovie(id, mv)
+	err = mh.Svc.UpdateMovieById(id, movieStruct)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusNotFound) //or 500 error?
 		}

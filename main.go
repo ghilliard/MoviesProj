@@ -20,8 +20,8 @@ func main() {
 	//constructing each layer of the application by giving it the error beneath it
 	r := repo.NewRepository(fn) //lowest layer
 	svc := service.NewService(r)
-	hdlr := handlers.NewMovieHandler(svc)
-	router := handlers.ConfigureRouter(hdlr)
+	handler := handlers.NewMovieHandler(svc)
+	router := handlers.ConfigureRouter(handler)
 
 	svr := &http.Server{
 		Handler: router,

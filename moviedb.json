@@ -88,8 +88,7 @@
    "Title": "Whiplash",
    "Genre": [
     "Drama",
-    "Music",
-    "Fantasy"
+    "Music"
    ],
    "Description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.",
    "Director": "Damien Chazelle",
@@ -98,6 +97,37 @@
     "J.K. Simmons"
    ],
    "Rating": 8.5
+  },
+  {
+   "Id": "583d7994-f2d7-433a-a965-3709dc44a5de",
+   "Title": "The Shawshank Redemption",
+   "Genre": [
+    "Drama"
+   ],
+   "Description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+   "Director": "Frank Darabont",
+   "MainActors": [
+    "Tim Robbins",
+    "Morgan Freeman",
+    "Bob Gunton"
+   ],
+   "Rating": 9.3
+  },
+  {
+   "Id": "9ca7b3d0-de50-458a-811e-3a6a31f4e42d",
+   "Title": "Se7en",
+   "Genre": [
+    "Drama",
+    "Crime",
+    "Mystery"
+   ],
+   "Description": "WHAT'S IN THE BOX?!",
+   "Director": "David Fincher",
+   "MainActors": [
+    "Brad Pitt",
+    "Morgan Freeman"
+   ],
+   "Rating": 8.6
   }
  ]
 }

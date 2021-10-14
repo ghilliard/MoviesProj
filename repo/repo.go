@@ -10,19 +10,19 @@ type DataBase struct {
 	Movies []entities.Movie
 }
 
-type File struct {
+type Repo struct {
 	Filename string
 }
 
-func NewRepository(fn string) File { //func that returns File struct that is called in main
-	return File{
+func NewRepository(fn string) Repo { //func that returns File struct that is called in main
+	return Repo{
 		Filename: fn,
 	}
 }
 
-func (f File) AddMovie(mv entities.Movie) error { //method to File so we can call it in ReadFile
+func (r Repo) AddMovie(m entities.Movie) error { //method to File so we can call it in ReadFile
 	db := DataBase{}
-	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	jsonBytes, err := ioutil.ReadFile(r.Filename)
 	if err != nil {
 		return err
 	}
@@ -30,23 +30,23 @@ func (f File) AddMovie(mv entities.Movie) error { //method to File so we can cal
 	if err != nil {
 		return err
 	}
-	db.Movies = append(db.Movies, mv)
+	db.Movies = append(db.Movies, m)
 
 	movieBytes, err := json.MarshalIndent(db, "", " ")
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(f.Filename, movieBytes, 0644)
+	err = ioutil.WriteFile(r.Filename, movieBytes, 0644)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (f File) ViewMovies() (DataBase, error) {
+func (r Repo) ViewMovies() (DataBase, error) {
 	db := DataBase{}
-	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	jsonBytes, err := ioutil.ReadFile(r.Filename)
 	if err != nil {
 		return db, err
 	}
@@ -57,9 +57,9 @@ func (f File) ViewMovies() (DataBase, error) {
 	return db, nil
 }
 
-func (f File) FindMovieById(id string) (entities.Movie, error) {
+func (r Repo) FindMovieById(id string) (entities.Movie, error) {
 	db := DataBase{}
-	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	jsonBytes, err := ioutil.ReadFile(r.Filename)
 	if err != nil {
 		return entities.Movie{}, err
 	}
@@ -76,9 +76,9 @@ func (f File) FindMovieById(id string) (entities.Movie, error) {
 	return idFound, nil
 }
 
-func (f File) DeleteMovieById(id string) error {
+func (r Repo) DeleteMovieById(id string) error {
 	db := DataBase{}
-	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	jsonBytes, err := ioutil.ReadFile(r.Filename)
 	if err != nil {
 		return err
 	}
@@ -98,16 +98,16 @@ func (f File) DeleteMovieById(id string) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(f.Filename, movieBytes, 0644)
+	err = ioutil.WriteFile(r.Filename, movieBytes, 0644)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (f File) UpdateMovie(id string, m entities.Movie) error {
+func (r Repo) UpdateMovieById(id string, m entities.Movie) error {
 	db := DataBase{}
-	jsonBytes, err := ioutil.ReadFile(f.Filename)
+	jsonBytes, err := ioutil.ReadFile(r.Filename)
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (f File) UpdateMovie(id string, m entities.Movie) error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(f.Filename, movieBytes, 0644)
+	err = ioutil.WriteFile(r.Filename, movieBytes, 0644)
 	if err != nil {
 		return err
 	}

@@ -7,21 +7,31 @@ import (
 	"github.com/google/uuid"
 )
 
-type Service struct { //create a struct of repo.File so you can use it as a method
-	File repo.File
+// Instance of interface that defines the functionality that a repo struct must have in order to be called in this service layer
+type Repository interface {
+	AddMovie(m entities.Movie) error
+	ViewMovies() (repo.DataBase, error)
+	FindMovieById (id string) (entities.Movie, error)
+	DeleteMovieById (id string) error
+	UpdateMovieById (id string, m entities.Movie) error
 }
 
-func NewService(f repo.File) Service { //func that returns Service struct that is called in main
+type Service struct { //create a struct of repo.Repo so you can use it as a method
+	Repo Repository
+}
+
+//constructor func that that accepts interface and returns Service struct that is called in main
+func NewService(r Repository) Service {
 	return Service{
-		File: f,
+		Repo: r,
 	}
 }
 
-func (s Service) CallMovie(mv entities.Movie) error {
-	mv.Id = uuid.New().String()
+func (s Service) AddMovie(m entities.Movie) error {
+	m.Id = uuid.New().String()
 
-	if mv.Rating >= 0 && mv.Rating <= 10 {
-		err := s.File.AddMovie(mv)
+	if m.Rating >= 0 && m.Rating <= 10 {
+		err := s.Repo.AddMovie(m)
 		if err != nil {
 			return err
 		}
@@ -31,7 +41,7 @@ func (s Service) CallMovie(mv entities.Movie) error {
 }
 
 func (s Service) ViewMovies() (repo.DataBase, error) {
-	db, err := s.File.ViewMovies()
+	db, err := s.Repo.ViewMovies()
 	if err != nil {
 		return db, err
 	}
@@ -39,7 +49,7 @@ func (s Service) ViewMovies() (repo.DataBase, error) {
 }
 
 func (s Service) FindMovieById(id string) (entities.Movie, error) {
-	movie, err := s.File.FindMovieById(id)
+	movie, err := s.Repo.FindMovieById(id)
 	if err != nil {
 		return movie, err
 	}
@@ -47,17 +57,21 @@ func (s Service) FindMovieById(id string) (entities.Movie, error) {
 }
 
 func (s Service) DeleteMovieById(id string) error {
-	err := s.File.DeleteMovieById(id)
+	err := s.Repo.DeleteMovieById(id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s Service) UpdateMovie(id string, m entities.Movie) error {
-	err := s.File.UpdateMovie(id, m)
-		if err != nil {
-			return err
-		}
-		return nil
+func (s Service) UpdateMovieById(id string, m entities.Movie) error {
+	if id != m.Id {
+		return errors.New("id must match url id")
 	}
+
+	err := s.Repo.UpdateMovieById(id, m)
+	if err != nil {
+		return err
+	}
+	return nil
+}
